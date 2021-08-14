@@ -12,14 +12,15 @@
     "autoprefixer": "^9.8.5",
     "axios": "^0.21.1",
     "cruip-js-toolkit": "^1.0.2",
-    "node-sass": "^4.14.1",
+    "node-sass": "^6.0.1",
     "postcss-cli": "^7.1.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "3.4.1",
+    "react-scripts": "^4.0.3",
     "react-transition-group": "^4.4.1",
-    "tailwindcss": "^1.5.2"
+    "tailwind": "^4.0.0",
+    "tailwindcss": "^2.2.7"
   },
   "scripts": {
     "start": "craco start",

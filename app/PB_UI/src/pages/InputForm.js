@@ -37,8 +37,6 @@ class InputForm extends React.Component {
       usrchoice: changeEvent.target.value
     });
   }
-  
-
 
   handleSubmit = (event) => {
     event.preventDefault()
@@ -60,6 +58,39 @@ class InputForm extends React.Component {
     this.setState({
       [event.target.name]: event.target.value
     });
+  }
+
+  handleDateChange = (event) =>{
+    event.target.value = this.addSlashes(event.target.value);
+    event.preventDefault()
+    this.setState({
+      [event.target.name]: event.target.value
+    });
+  }
+
+  checkValue(str, max){
+    if (str.charAt(0) !== '0' || str === '00') {
+      var num = parseInt(str);
+      if (isNaN(num) || num <= 0 || num > max) num = 1;
+      str = num > parseInt(max.toString().charAt(0)) 
+             && num.toString().length === 1 ? '0' + num : num.toString();
+    };
+    return str;
+  }
+
+  addSlashes(dob){
+      if (/\D\/$/.test(dob)) dob = dob.substr(0, dob.length - 1);
+      var values = dob.split('/').map(function(v) {
+        return v.replace(/\D/g, '')
+      });
+      console.log(values);
+      if (values[0]) values[0] = this.checkValue(values[0], 12);
+      if (values[1]) values[1] = this.checkValue(values[1], 31);
+      var output = values.map(function(v, i) {
+        return v.length === 2 && i < 2 ? v + '/' : v;
+      });
+      dob = output.join('').substr(0, 10);
+      return dob;
   }
 
   render() {
@@ -221,7 +252,7 @@ class InputForm extends React.Component {
                                 </li>
                               </ul>
                               {/* <label className="block text-gray-300 text-sm font-medium mb-1" htmlFor="Date of Birth">Date of Birth </label> */}
-                              <input name="dob" value={dob} onChange={this.handleInputChange} id="date of birth" type="date of birth" className="form-input w-full text-gray-300" placeholder="MM/DD/YYYY" />
+                              <input name="dob" value={dob} onChange={this.handleDateChange} id="date of birth" type="date of birth" className="form-input w-full text-gray-300" placeholder="MM/DD/YYYY" />
                             </div>
                         </div>
                       {/* age */}
@@ -532,7 +563,7 @@ class InputForm extends React.Component {
                         </div>
                       </div>
                       <div className="text-sm text-gray-500 text-center">
-                        This is run entirely locally, we don't have access to this data. Here's our <a href="https://privacybot.io/privacypolicy" target="_blank"> privacy policy</a>.
+                        This is run entirely locally, we don't have access to this data. Here's our <a href="https://privacybot.io/privacypolicy" target="_blank"> <u>privacy policy</u></a>.
                       </div>
                     </div>
                   </form>

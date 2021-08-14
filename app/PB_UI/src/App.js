@@ -37,7 +37,7 @@ function App() {
   }, [location.pathname]); // triggered on route change
 
   return (
-    <>
+    <div>
       <Switch>
         <Route exact path="/">
           <Home />
@@ -79,7 +79,7 @@ function App() {
           <PageNotFound />
         </Route>
       </Switch>
-    </>
+    </div>
   );
 }
 
