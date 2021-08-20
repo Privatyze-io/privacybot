@@ -5,8 +5,8 @@ import { withRouter } from 'react-router-dom';
 import Header from '../partials/Header';
 import PageIllustration from '../partials/PageIllustration';
 import Dropdown from '../utils/Dropdown';
-
-
+import IntlTelInput from 'react-intl-tel-input';
+import '../css/intlTelInput.scss';
 
 class InputForm extends React.Component {
   constructor(props) {
@@ -31,7 +31,7 @@ class InputForm extends React.Component {
 
     this.handleInputChange = this.handleInputChange.bind(this);
   }
-  
+
   handleOptionChange = changeEvent => {
     this.setState({
       usrchoice: changeEvent.target.value
@@ -68,6 +68,63 @@ class InputForm extends React.Component {
     });
   }
 
+  handleTwitterChange = (event) =>{
+    event.target.value = this.checkAtSign(event.target.value);
+    event.preventDefault()
+    this.setState({
+      [event.target.name]: event.target.value
+    });
+  }
+
+  handleAgeChange = (event) =>{
+    event.target.value = this.checkAge(event.target.value);
+    event.preventDefault()
+    this.setState({
+      [event.target.name]: event.target.value
+    });
+  }
+
+  handleZipChange = (event) =>{
+    event.target.value = this.checkLength(event.target.value, 5);
+    event.preventDefault()
+    this.setState({
+      [event.target.name]: event.target.value
+    });
+  }
+
+  handleCardChange = (event) =>{
+    event.target.value = this.checkLength(event.target.value, 4);
+    event.preventDefault()
+    this.setState({
+      [event.target.name]: event.target.value
+    });
+  }
+
+  checkAge(str){
+    const n = parseInt(str);
+    if(!str || isNaN(n)){
+      return "";
+    }
+    str = parseInt(Math.min(Math.max(n, 0), 120));
+    return str;
+  }
+
+  checkAtSign(str){
+    if(str != "" && str.substring(0,1) != "@"){
+      str = "@" + str;
+    }
+    if(str.substr(str.length - 1) == " "){
+      str = str.substr(0, str.length - 1) + "_"
+    }
+    return str;
+  }
+
+  checkLength(str, n){
+    if(str.length > n)
+      str = str.substring(0, str.length - 1);
+    return str;
+  }
+
   checkValue(str, max){
     if (str.charAt(0) !== '0' || str === '00') {
       var num = parseInt(str);
@@ -75,6 +132,17 @@ class InputForm extends React.Component {
       str = num > parseInt(max.toString().charAt(0)) 
              && num.toString().length === 1 ? '0' + num : num.toString();
     };
+    return str;
+  }
+
+  checkYear(str){
+    if(str.length < 2){
+      return str;
+    }else if(parseInt(str.substring(0,2)) < 19){
+      str = parseInt(19);
+    }else if(parseInt(str.substring(0,2)) > 20){
+      str = parseInt(20);
+    }
     return str;
   }
 
@@ -86,6 +154,7 @@ class InputForm extends React.Component {
       console.log(values);
       if (values[0]) values[0] = this.checkValue(values[0], 12);
       if (values[1]) values[1] = this.checkValue(values[1], 31);
+      if (values[2]) values[2] = this.checkYear(values[2]);
       var output = values.map(function(v, i) {
         return v.length === 2 && i < 2 ? v + '/' : v;
       });
@@ -218,7 +287,7 @@ class InputForm extends React.Component {
                                 </li>
                               </ul>
                               {/* <label className="block text-gray-300 text-sm font-medium mb-1" htmlFor="Zip Code">Zip Code </label> */}
-                              <input name="zip" value={zip} onChange={this.handleInputChange} id="zip code" type="zip code" className="form-input w-full text-gray-300" placeholder="12345" />
+                              <input name="zip" value={zip} onChange={this.handleZipChange} id="zip code" type="zip code" className="form-input w-full text-gray-300" placeholder="12345" />
                             </div>
                         </div>
                       {/* country */}
@@ -269,7 +338,7 @@ class InputForm extends React.Component {
                               </li>
                             </ul>
                             {/* <label className="block text-gray-300 text-sm font-medium mb-1" htmlFor="Age">Age </label> */}
-                            <input name="age" value={age} onChange={this.handleInputChange} id="age" type="age" className="form-input w-full text-gray-300" placeholder="29" />
+                            <input name="age" value={age} onChange={this.handleAgeChange} id="age" type="age" className="form-input w-full text-gray-300" placeholder="29" />
                           </div>
                       </div>
                       {/* phone_num */}
@@ -286,7 +355,8 @@ class InputForm extends React.Component {
                                 </li>
                               </ul>
                               {/* <label className="block text-gray-300 text-sm font-medium mb-1" htmlFor="Phone Number">Phone Number </label> */}
-                              <input name="phone_num" value={phone_num} onChange={this.handleInputChange} id="phone number" type="phone number" className="form-input w-full text-gray-300" placeholder="555-555-5555" />
+                              {/*<input name="phone_num" value={phone_num} onChange={this.handleInputChange} id="phone number" type="phone number" className="form-input w-full text-gray-300" placeholder="555-555-5555" />*/}
+                              <IntlTelInput onChange={this.handleInputChange} containerClassName="intl-tel-input" inputClassName="form-control"/>
                             </div>
                         </div>
                       {/* cc_last4 */}
@@ -303,7 +373,7 @@ class InputForm extends React.Component {
                               </li>
                             </ul>
                             {/* <label className="block text-gray-300 text-sm font-medium mb-1" htmlFor="Last 4 Digits of Credit Card Number">Last 4 Digits of Credit Card Number </label> */}
-                            <input name="cc_last4" value={cc_last4} onChange={this.handleInputChange} id="credit card" type="credit card" className="form-input w-full text-gray-300" placeholder="1234" />
+                            <input name="cc_last4" value={cc_last4} onChange={this.handleCardChange} id="credit card" type="credit card" className="form-input w-full text-gray-300" placeholder="1234" />
                           </div>
                       </div>
                       {/* device_ad_id */}
@@ -327,7 +397,7 @@ class InputForm extends React.Component {
                                 </li>
                               </ul>
                               {/* <label className="block text-gray-300 text-sm font-medium mb-1" htmlFor="Twitter Handle">Twitter </label> */}
-                              <input name="twitter_handle" value={twitter_handle} onChange={this.handleInputChange} id="twitter handle" type="twitter handle" className="form-input w-full text-gray-300" placeholder="@twitter_handle" />
+                              <input name="twitter_handle" value={twitter_handle} onChange={this.handleTwitterChange} id="twitter handle" type="twitter handle" className="form-input w-full text-gray-300" placeholder="@twitter_handle" />
                             </div>
                         </div>
                     </div>
